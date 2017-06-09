@@ -50,12 +50,13 @@ public class SocketActivity extends AppCompatActivity implements View.OnClickLis
     Button sendpfBtn;
     Button saveBtn;
 
+    private static final int columnMax = 7;
+
     TextView tv1;
     String type[] = {"이름","주소","직책","E-mail","Fax","Call","Phone"};
-    String str[] = new String[7];
-    String buf[] = new String[7];
+    String str[] = new String[columnMax];
+    String buf[] = new String[columnMax];
 
-    private static final int columnMax = 7;
 
     private String ip = "192.168.62.74";
     private int port = 9998;
