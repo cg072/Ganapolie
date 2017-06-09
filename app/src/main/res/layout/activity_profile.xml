@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.kch.www.newkchproject.ProfileActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#123123"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:id="@+id/a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/sub2img"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="5dp"
+                android:background="#ffffff" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/b"
+            android:layout_below="@+id/a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="#ffffff"
+            android:padding="10dp"
+            android:text="이름 : "
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/nameEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/b"
+            android:layout_toEndOf="@+id/b"
+            android:layout_alignTop="@+id/b"
+            android:layout_above="@+id/c"
+            android:background="#ffffff"/>
+
+        <TextView
+            android:id="@+id/c"
+            android:layout_below="@+id/b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="#ffffff"
+            android:padding="10dp"
+            android:text="주소 : "
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/addrEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/c"
+            android:layout_toEndOf="@+id/c"
+            android:layout_alignTop="@+id/c"
+            android:layout_above="@+id/d"
+            android:background="#ffffff"/>
+
+
+        <TextView
+            android:id="@+id/d"
+            android:layout_below="@+id/c"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="#ffffff"
+            android:padding="10dp"
+            android:text="직책 : "
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/positionEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/d"
+            android:layout_toEndOf="@+id/d"
+            android:layout_alignTop="@+id/d"
+            android:layout_above="@+id/e"
+            android:background="#ffffff"/>
+
+
+        <TextView
+            android:id="@+id/e"
+            android:layout_below="@+id/d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="#ffffff"
+            android:padding="10dp"
+            android:text="E-mail :"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/emailEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/e"
+            android:layout_toEndOf="@+id/e"
+            android:layout_alignTop="@+id/e"
+            android:layout_above="@+id/f"
+            android:background="#ffffff"/>
+
+
+        <TextView
+            android:id="@+id/f"
+            android:layout_below="@+id/e"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="#ffffff"
+            android:padding="10dp"
+            android:text="Fax : "
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/faxEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/f"
+            android:layout_toEndOf="@+id/f"
+            android:layout_alignTop="@+id/f"
+            android:layout_above="@+id/g"
+            android:background="#ffffff"/>
+
+
+
+        <TextView
+            android:id="@+id/g"
+            android:layout_below="@+id/f"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="#ffffff"
+            android:padding="10dp"
+            android:text="Call : "
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/callEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/g"
+            android:layout_toEndOf="@+id/g"
+            android:layout_alignTop="@+id/g"
+            android:layout_above="@+id/h"
+            android:background="#ffffff"/>
+
+
+        <TextView
+            android:id="@+id/h"
+            android:layout_below="@+id/g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="#ffffff"
+            android:padding="10dp"
+            android:text="phone"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/phoneEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/h"
+            android:layout_toEndOf="@+id/h"
+            android:layout_alignTop="@+id/h"
+            android:layout_alignBottom="@+id/h"
+            android:background="#ffffff"
+            />
+
+    </RelativeLayout>
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+       <Button
+           android:id="@+id/profileBtn1"
+           android:layout_width="0dp"
+           android:layout_height="match_parent"
+           android:layout_weight="1"
+           android:text="확인"
+           />
+
+       <Button
+           android:id="@+id/profileBtn2"
+           android:layout_width="0dp"
+           android:layout_height="match_parent"
+           android:layout_weight="1"
+           android:text="취소"/>
+   </LinearLayout>
+
+</LinearLayout>
