@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -30,7 +31,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,6 +73,8 @@ public class SocketActivity extends AppCompatActivity implements View.OnClickLis
 
     String dbName;
     SQLiteDatabase database;
+
+    private boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +116,7 @@ public class SocketActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-        handler = new Handler();
+        handler = new Handler(Looper.getMainLooper());
 
         idByANDROID_ID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -127,7 +134,7 @@ public class SocketActivity extends AppCompatActivity implements View.OnClickLis
 
         try {
             client = new Socket(ip, port);
-
+            client.setSoTimeout(2);
             Log.d("Socket -","Connect Success");
 
             os = client.getOutputStream();
@@ -135,12 +142,21 @@ public class SocketActivity extends AppCompatActivity implements View.OnClickLis
             dos = new DataOutputStream(os);
             dis = new DataInputStream(is);
 
+            flag = true;
 
+        }catch(SocketException e){
+            flag = false;
+            Log.d("Socket Error  :", "SocketException");
+        }catch(SocketTimeoutException e) {
+            flag = false;
+            Log.d("Socket Error  :", "SocketTimeoutException");
+        }
+        catch (IOException e) {
 
-        } catch (IOException e) {
             Log.d("Socket Error  :", "Connect False");
 
         }
+
     }
 
     public void socketClose()
@@ -154,45 +170,82 @@ public class SocketActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.sendBtn) {
+        if(flag) {
+            if (v.getId() == R.id.sendBtn) {
 
-            SendThread sendThread = new SendThread(numberEt.getText().toString());
-            sendThread.start();
+                SendThread sendThread = new SendThread(numberEt.getText().toString());
+                sendThread.start();
 
-        }
-        else if(v.getId() == R.id.linkBtn) {
-            SendThread sendThread = new SendThread(idByANDROID_ID);
-            sendThread.start();
-            //oos.writeObject(idByANDROID_ID);
+            } else if (v.getId() == R.id.linkBtn) {
+                SendThread sendThread = new SendThread(idByANDROID_ID);
+                sendThread.start();
+                //oos.writeObject(idByANDROID_ID);
 
-        }
-        else if(v.getId() == R.id.sendpfBtn) {
+            } else if (v.getId() == R.id.sendpfBtn) {
 
-            DataThread dataThread = new DataThread(buf);
-            dataThread.start();
+                DataThread dataThread = new DataThread(buf);
+                dataThread.start();
 
-        }
-        else if(v.getId() == R.id.saveBtn)
-        {
-            this.showContacts();
-            Cursor cursor = database.rawQuery("select * from king",null);
-            int num = cursor.getCount()+1;
-            Log.d("num : "," "+num);
-            database.execSQL("INSERT INTO king VALUES("+num+", '"+buf[1]+"','"+buf[2]+"','"+buf[3]+"','"+buf[4]+"','"+buf[5]+"',' ')");
+            } else if (v.getId() == R.id.saveBtn) {
+                this.showContacts();
+                Cursor cursor = database.rawQuery("select * from king", null);
+                int num = cursor.getCount() + 1;
+                Log.d("num : ", " " + num);
+                database.execSQL("INSERT INTO king VALUES(" + num + ", '" + buf[1] + "','" + buf[2] + "','" + buf[3] + "','" + buf[4] + "','" + buf[5] + "',' ')");
 
-            cursor.close();
+                cursor.close();
+            }
         }
     }
 
     class SocketThread extends Thread {
+        Context context = null;
         public void run() {
-            socketSet();
-            ReadThread readThread = new ReadThread();
-            readThread.start();
+            SocketAddress socketAddress = new InetSocketAddress(ip,port);
+            context = this.context;
+            int timeout = 3000;
+            try {
+                client = new Socket();
+                client.setSoTimeout(timeout);
+                client.connect(socketAddress,timeout);
+                Log.d("Socket -","Connect Success");
+
+                os = client.getOutputStream();
+                is = client.getInputStream();
+                dos = new DataOutputStream(os);
+                dis = new DataInputStream(is);
+
+                flag = true;
+
+            }catch(SocketException e){
+                flag = false;
+                Log.d("Socket Error  :", "SocketException");
+            }catch(SocketTimeoutException e) {
+                flag = false;
+                Log.d("Socket Error  :", "SocketTimeoutException");
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv1.append("\n\n서버와 연결이 끊켰습니다!");
+                        tv1.append("\n다시 시작해주세요!");
+                    }
+                });
+            }
+            catch (IOException e) {
+
+                Log.d("Socket Error  :", "Connect False");
+
+            }
+            //socketSet();
+            if(flag) {
+                ReadThread readThread = new ReadThread();
+                readThread.start();
+            }
 
 
         }
     }
+
 
     class SendThread extends Thread{
         String buf;
