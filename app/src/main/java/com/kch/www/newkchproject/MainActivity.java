@@ -337,27 +337,29 @@ public class MainActivity extends AppCompatActivity
 
                 cursor2.moveToFirst();
 
-                int numidx = cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-
-                int imgidx = cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_ID);
-
-                String number = cursor2.getString(numidx);
-                map.put("number",number);
-
-                Log.d("Map Data : ",""+name+" , "+number);
-
-                //전화번호를 통해 Photo를 받아옴
-
-                Bitmap img = getFacebookPhoto(number);
-                map.put("img",img);
-
-                contacts.add(map);
+                if( cursor2 != null && cursor2.moveToFirst() ) {
 
 
+                    int numidx = cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
 
-                moveList.add(new MoveListDataSet(name,number,img));
+                    int imgidx = cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_ID);
+
+                    String number = cursor2.getString(numidx);
+                    map.put("number", number);
+
+                    Log.d("Map Data : ", "" + name + " , " + number);
+
+                    //전화번호를 통해 Photo를 받아옴
+
+                    Bitmap img = getFacebookPhoto(number);
+                    map.put("img", img);
+
+                    contacts.add(map);
 
 
+                    moveList.add(new MoveListDataSet(name, number, img));
+
+                }
             } while (cursor.moveToNext());
         }
         // Close the curosor

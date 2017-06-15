@@ -58,8 +58,7 @@ public class ThActivity extends AppCompatActivity implements NavigationView.OnNa
     private static final int min = 60;
     private static final int hour = 24;
 
-    // Request code for WRITE_CONTACTS. It can be any number > 0.
-    private static final int PERMISSIONS_REQUEST_CALL_PHONE = 100;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +130,7 @@ public class ThActivity extends AppCompatActivity implements NavigationView.OnNa
 
         recyclerView.setAdapter(cardAdapter);
 
-        this.showContacts();
+
     }
 
     @Override
@@ -345,32 +344,7 @@ public class ThActivity extends AppCompatActivity implements NavigationView.OnNa
         db.execSQL("UPDATE userDate SET thisDate = "+days);
     }
 
-    //연락처 부르는 메서드
-
-    /**
-     * Show the contacts in the ListView.
-     */
-    private void showContacts() {
-        // Check the SDK version and whether the permission is already granted or not.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CALL_PHONE);
-            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
-        } else {
-            // Android version is lesser than 6.0 or the permission is already granted.
 
 
-        }
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_CALL_PHONE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                showContacts();
-            } else {
-                Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 }

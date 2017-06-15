@@ -8,15 +8,10 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
     <TextView
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="검색어 : "/>
-    <EditText
-        android:id="@+id/selectEt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"/>
+        android:text=" * 누르시면 전화통화로 연결됩니다. "/>
+
 
   </LinearLayout>
 

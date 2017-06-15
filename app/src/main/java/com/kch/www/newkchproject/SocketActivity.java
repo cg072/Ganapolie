@@ -326,10 +326,14 @@ public class SocketActivity extends AppCompatActivity implements View.OnClickLis
         super.onStop();
         try {
             if(client!=null) {
-                os.close();
-                is.close();
-                dos.close();
-                dis.close();
+                if(os!=null) {
+                    os.close();
+                    dos.close();
+                }
+                if(is!=null) {
+                    is.close();
+                    dis.close();
+                }
                 client.close();
                 Log.d("Stop!!!!!!","in!!!!");
             }
