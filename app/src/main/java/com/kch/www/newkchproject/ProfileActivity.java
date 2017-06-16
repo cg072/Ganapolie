@@ -47,7 +47,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     Button eBtn;
     Button cBtn;
 
-    ArrayList<MoveListDataSet> moveList;
+    ArrayList profilelist;
 
     private int position = 0;
     private int phone = 0;
@@ -82,7 +82,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         Intent i = getIntent();
 
-        moveList = i.getParcelableArrayListExtra("array");
+        profilelist = i.getParcelableArrayListExtra("array");
 
         int num = 0;
         position = i.getIntExtra("position",num);
@@ -95,10 +95,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         Log.d("Profile Position",""+position);
         Log.d("Profile num",""+num);
 
-        Drawable d = new BitmapDrawable(getResources(), (Bitmap) moveList.get(position).getImg());
+        Drawable d = new BitmapDrawable(getResources(), (Bitmap) profilelist.get(2));
         sub2img.setImageDrawable(d);
-        nameEt.setText(moveList.get(position).getName());
-        phoneEt.setText(moveList.get(position).getNumber());
+        nameEt.setText(profilelist.get(0).toString());
+        phoneEt.setText(profilelist.get(1).toString());
 
 
 
