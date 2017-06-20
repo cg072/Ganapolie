@@ -1,5 +1,7 @@
 package com.kch.www.newkchproject;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +10,11 @@ import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -41,7 +46,9 @@ import com.kch.www.newkchproject.DataSet.MoveListDataSet;
 import com.kch.www.newkchproject.DataSet.PagerDataSet;
 import com.kch.www.newkchproject.DataSet.UserlistDataset;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /*
@@ -108,14 +115,16 @@ public class SubActivity extends AppCompatActivity
             tab.getTabAt(i).setIcon(pagerData.get(i).getId());
         }
 
-
+        //
+        moveList = new ArrayList<>();
+        getContactNames();
 
         //연락처
-        Intent i = getIntent();
+        //Intent i = getIntent();
 
-        moveList = i.getParcelableArrayListExtra("array");
+        //moveList = i.getParcelableArrayListExtra("array");
 
-        Log.d("SubActivity",moveList.get(1).getName());
+        //Log.d("SubActivity",moveList.get(1).getName());
 
         moveAdapter = new MoveAdapter(moveList);
 
@@ -182,7 +191,7 @@ public class SubActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             Intent i = new Intent(this, SubActivity.class);
 
-            i.putParcelableArrayListExtra("array",moveList);
+            //i.putParcelableArrayListExtra("array",moveList);
 
             startActivity(i);
 
@@ -190,7 +199,7 @@ public class SubActivity extends AppCompatActivity
             Intent in = new Intent(this, ThActivity.class);
 
             in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            in.putParcelableArrayListExtra("array",moveList);
+            //in.putParcelableArrayListExtra("array",moveList);
 
             startActivity(in);
         } else if (id == R.id.nav_manage) {
@@ -207,14 +216,112 @@ public class SubActivity extends AppCompatActivity
         return true;
     }
 
+    private ArrayList<Map<String,Object>> getContactNames() {
+        HashMap<String,Object> map = new HashMap<>();
+        ArrayList<Map<String,Object>> contacts = new ArrayList<>();
+
+
+        // Get the ContentResolver
+        ContentResolver cr = getContentResolver();
+        // Get the Cursor of all the contacts
+        Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+
+        int ididx = cursor.getColumnIndex(ContactsContract.Contacts._ID);
+        int nameidx = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+
+        // Move the cursor to first. Also check whether the cursor is empty or not.
+        if (cursor.moveToFirst()) {
+            // Iterate through the cursor
+            do {
+                map = new HashMap<>();
+                // Get the contacts name
+                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                map.put("name",name);
+
+                // Get the contacts number
+                String id = cursor.getString(ididx);
+                Cursor cursor2 = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                        new String[]{id}, null);
+
+                cursor2.moveToFirst();
+
+                if( cursor2 != null && cursor2.moveToFirst() ) {
+
+
+                    int numidx = cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+                    int imgidx = cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_ID);
+
+                    String number = cursor2.getString(numidx);
+                    map.put("number", number);
+
+                    Log.d("Map Data : ", "" + name + " , " + number);
+
+                    //전화번호를 통해 Photo를 받아옴
+
+                    Bitmap img = getFacebookPhoto(number);
+                    map.put("img", img);
+
+                    contacts.add(map);
+
+                    moveList.add(new MoveListDataSet(name, number, img));
+
+
+                }
+            } while (cursor.moveToNext());
+        }
+        // Close the curosor
+        cursor.close();
+
+        Log.d("Contacts : ",""+contacts.get(0).get("name")+" , "+contacts.get(1).get("name")+" , "+contacts.get(2).get("name"));
+
+        return contacts;
+    }
+
+    public Bitmap getFacebookPhoto(String phoneNumber){
+        Uri phoneUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Uri photoUri = null;
+        ContentResolver cr = this.getContentResolver();
+        Cursor contact = cr.query(phoneUri,
+                new String[] { ContactsContract.Contacts._ID }, null, null, null);
+        if (contact.moveToFirst()) {
+            long userId = contact.getLong(contact.getColumnIndex(ContactsContract.Contacts._ID));
+            photoUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, userId);
+        }
+        else {
+            Bitmap defaultPhoto = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_menu_report_image);
+            return defaultPhoto;
+        }
+        if (photoUri != null) {
+            InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(
+                    cr, photoUri);
+            if (input != null) {
+                return BitmapFactory.decodeStream(input);
+            }
+        } else {
+            Bitmap defaultPhoto = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_menu_report_image);
+            return defaultPhoto;
+        }
+        Bitmap defaultPhoto = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_menu_report_image);
+        return defaultPhoto;
+    }
+
     public void btnClick(int check)
     {
+        ArrayList profilelist = new ArrayList();
+
         switch (check)
         {
             case 1:
 
                 Intent i = new Intent(this,ProfileActivity.class);
-                i.putParcelableArrayListExtra("array",moveList);
+
+                profilelist.add(moveList.get(position).getName());
+                profilelist.add(moveList.get(position).getNumber());
+                profilelist.add(moveList.get(position).getImg());
+
+                i.putParcelableArrayListExtra("array",profilelist);
                 i.putExtra("position",position);
                 i.putExtra("dbName",dbName);
                 startActivity(i);

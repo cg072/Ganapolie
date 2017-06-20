@@ -53,7 +53,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * autor : kyung chang hyun
+ * date	 :2017.06.16
+ * comment: Home
+ * memo : 1. 연락처 불러오기 완료
+ *        2. SMS 완료
+ *        3. 다량의 연락처로 엑티비티 실행불가 문제
+ **/
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -188,7 +195,10 @@ public class MainActivity extends AppCompatActivity
 
         moveList = new ArrayList<>();
 
-        this.showContacts();
+        addrData = getContactNames();
+        AddrAdapter adapter = new AddrAdapter(this, R.layout.userlist_item, addrData);
+        list.setAdapter(adapter);
+
 
     }
 
@@ -247,13 +257,13 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             Intent i = new Intent(this, SubActivity.class);
 
-            i.putParcelableArrayListExtra("array",moveList);
+            //i.putParcelableArrayListExtra("array",moveList);
 
             startActivity(i);
         } else if (id == R.id.nav_slideshow) {
             Intent in = new Intent(this, ThActivity.class);
 
-            in.putParcelableArrayListExtra("array",moveList);
+            //in.putParcelableArrayListExtra("array",moveList);
 
             startActivity(in);
 
@@ -273,36 +283,13 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    //연락처 부르는 메서드
 
     /**
-     * Show the contacts in the ListView.
-     */
-    private void showContacts() {
-        // Check the SDK version and whether the permission is already granted or not.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
-            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
-        } else {
-            // Android version is lesser than 6.0 or the permission is already granted.
-            addrData = getContactNames();
-            AddrAdapter adapter = new AddrAdapter(this, R.layout.userlist_item, addrData);
-            list.setAdapter(adapter);
-
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                showContacts();
-            } else {
-                Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+     * autor : kyung chang hyun
+     * data	 :2017.06.15
+     * comment: 연락처DB에서 불러오기
+     * memo : 추후 진행상황 각 엑티비티마다 연락처를 불러올것
+     **/
 
     /**
      * Read the name of all the contacts.
@@ -312,6 +299,8 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<Map<String,Object>> getContactNames() {
         HashMap<String,Object> map = new HashMap<>();
         ArrayList<Map<String,Object>> contacts = new ArrayList<>();
+
+
         // Get the ContentResolver
         ContentResolver cr = getContentResolver();
         // Get the Cursor of all the contacts
@@ -356,8 +345,8 @@ public class MainActivity extends AppCompatActivity
 
                     contacts.add(map);
 
-
                     moveList.add(new MoveListDataSet(name, number, img));
+
 
                 }
             } while (cursor.moveToNext());

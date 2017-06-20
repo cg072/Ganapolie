@@ -130,35 +130,6 @@ public class SocketActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    public void socketSet() {
-
-        try {
-            client = new Socket(ip, port);
-            client.setSoTimeout(2);
-            Log.d("Socket -","Connect Success");
-
-            os = client.getOutputStream();
-            is = client.getInputStream();
-            dos = new DataOutputStream(os);
-            dis = new DataInputStream(is);
-
-            flag = true;
-
-        }catch(SocketException e){
-            flag = false;
-            Log.d("Socket Error  :", "SocketException");
-        }catch(SocketTimeoutException e) {
-            flag = false;
-            Log.d("Socket Error  :", "SocketTimeoutException");
-        }
-        catch (IOException e) {
-
-            Log.d("Socket Error  :", "Connect False");
-
-        }
-
-    }
-
     public void socketClose()
     {
         try {
