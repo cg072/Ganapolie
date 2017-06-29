@@ -205,11 +205,12 @@ public class SubActivity extends AppCompatActivity
         } else if (id == R.id.nav_manage) {
             Intent bc = new Intent(this, BusinessCardActivity.class);
             startActivity(bc);
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
+//        else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout2);
         drawer.closeDrawer(GravityCompat.START);

@@ -351,11 +351,12 @@ public class ThActivity extends AppCompatActivity implements NavigationView.OnNa
         } else if (id == R.id.nav_manage) {
             Intent bc = new Intent(this, BusinessCardActivity.class);
             startActivity(bc);
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
+//        else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout3);
         drawer.closeDrawer(GravityCompat.START);
